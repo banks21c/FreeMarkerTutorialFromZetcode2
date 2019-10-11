@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+<!-- 	<context-param> -->
+<!-- 		<param-name>contextConfigLocation</param-name> -->
+<!-- 		<param-value>/WEB-INF/spring/root-context.xml</param-value> -->
+<!-- 	</context-param> -->
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+<!-- 	<listener> -->
+<!-- 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> -->
+<!-- 	</listener> -->
+
+	<!-- Processes application requests -->
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>appServlet</servlet-name> -->
+<!-- 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>contextConfigLocation</param-name> -->
+<!-- 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<load-on-startup>1</load-on-startup> -->
+<!-- 	</servlet> -->
+		
+<!-- 	<servlet-mapping> -->
+<!-- 		<servlet-name>appServlet</servlet-name> -->
+<!-- 		<url-pattern>/</url-pattern> -->
+<!-- 	</servlet-mapping> -->
+
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>action</servlet-name> -->
+<!-- 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>config</param-name> -->
+<!-- 			<param-value>/WEB-INF/struts-config.xml</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<load-on-startup>1</load-on-startup> -->
+<!-- 	</servlet> -->
+	
+<!-- 	<jsp-config> -->
+<!-- 		<taglib> -->
+<!-- 			<taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri> -->
+<!-- 			<taglib-location>/WEB-INF/struts-logic.tld</taglib-location> -->
+<!-- 		</taglib> -->
+<!-- 	</jsp-config> -->
+
+<!-- 	<servlet-mapping> -->
+<!-- 		<servlet-name>action</servlet-name> -->
+<!-- 		<url-pattern>/go/*</url-pattern> -->
+<!-- 	</servlet-mapping> -->
+	
+	<servlet>
+		<servlet-name>freemarker</servlet-name>
+		<servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>
+		
+		<!--
+		Init-param documentation:
+		https://freemarker.apache.org/docs/api/freemarker/ext/servlet/FreemarkerServlet.html
+		TemplatePath
+		NoCache 
+		ContentType
+		OverrideResponseContentType 
+		OverrideResponseLocale
+		ResponseCharacterEncoding 
+		BufferSize
+		ExceptionOnMissingTemplate
+		MetaInfTldSources 
+		ClasspathTlds
+		Debug		
+		-->
+	
+		<!-- FreemarkerServlet settings: -->
+		<init-param>
+			<param-name>TemplatePath</param-name>
+			<param-value>/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>NoCache</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ResponseCharacterEncoding</param-name>
+		<!-- Use the output_encoding setting of FreeMarker: -->
+			<param-value>fromTemplate</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ExceptionOnMissingTemplate</param-name>
+		<!-- true => HTTP 500 on missing template, instead of HTTP 404. -->
+			<param-value>true</param-value>
+		</init-param>
+		<!-- FreeMarker engine settings: -->
+		<init-param>
+			<param-name>incompatible_improvements</param-name>
+			<param-value>2.3.23</param-value>
+		</init-param>
+		<init-param>
+			<param-name>template_exception_handler</param-name>
+		<!-- Use "html_debug" during development! -->
+			<param-value>html_debug</param-value>
+		</init-param>
+		<init-param>
+			<param-name>template_update_delay</param-name>
+		<!-- Use 0 during development! Consider what value you need otherwise. -->
+			<param-value>0 s</param-value>
+		</init-param>
+		<init-param>
+			<param-name>default_encoding</param-name>
+		<!-- The encoding of the template files: -->
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>output_encoding</param-name>
+		<!-- The encoding of the template output; Note that you must set
+			 "ResponseCharacterEncodring" to "fromTemplate" for this to work! -->
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>locale</param-name>
+			<param-value>en_US</param-value>
+		</init-param>
+		<init-param>
+			<param-name>number_format</param-name>
+			<param-value>0.##########</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>freemarker</servlet-name>
+		<url-pattern>*.ftl</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+<!--		 <url-pattern>*.html</url-pattern> -->
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!--
+		Prevent the visiting of MVC Views from outside the servlet container.
+		RequestDispatcher.forward/include should, and will still work.
+		Removing this may open security holes!
+	-->
+	<security-constraint>
+		<web-resource-collection>
+		<web-resource-name>FreeMarker MVC Views</web-resource-name>
+		<url-pattern>/</url-pattern>
+		<url-pattern>*.ftl</url-pattern>
+		<url-pattern>*.ftlh</url-pattern>
+		<url-pattern>*.ftlx</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+		<!-- Nobody is allowed to visit these directly. -->
+		</auth-constraint>
+	</security-constraint>
+		
+	<session-config>
+		<session-timeout>
+			30
+		</session-timeout>
+	</session-config>
+		
+</web-app>
